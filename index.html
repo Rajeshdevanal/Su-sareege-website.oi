@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Su Sarige - Luxury car rental in Bengaluru. Book Sedans, SUVs, and Luxury Cars for your travel needs.">
+  <meta name="keywords" content="car rental, luxury cars, Bengaluru, Su Sarige, sedan, SUV">
+  <meta property="og:title" content="Su Sarige - Luxury Car Rental">
+  <meta property="og:description" content="Rent premium cars in Bengaluru with Su Sarige. Explore our fleet of Sedans, SUVs, and Luxury Cars.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1621151621138-8cdcea8923cd?w=1200&h=630&fit=crop">
+  <title>Su Sarige - Luxury Car Rental</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-stone-100/90 font-sans transition-colors duration-300" onload="initEmailJS(); insertCars();">
+  <div id="toast" class="toast hidden" role="alert" aria-live="assertive">
+    <span id="toastMessage"></span>
+    <button onclick="hideToast()">✕</button>
+  </div>
+  <header id="header" class="bg-gradient-to-r from-teal-600 to-teal-800 text-white py-4 sticky top-0 shadow-xl z-50 transition-all duration-300">
+    <div class="container mx-auto px-6 flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="logo.jpg" alt="Su Sarige Logo" class="w-12 h-12 rounded-full mx-auto mb-4" loading="lazy">
+        <h1 class="text-3xl font-playfair font-bold">Su Sarige</h1>
+      </div>
+      <button class="md:hidden focus:outline-none hamburger" onclick="toggleMobileMenu()" aria-label="Toggle Mobile Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="navMenu" class="hidden md:flex md:items-center space-x-2">
+        <a href="#home" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="Home" aria-label="Home">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        </a>
+        <a href="#cars" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="Cars" aria-label="Cars">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+        </a>
+        <a href="#about" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="About" aria-label="About">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        </a>
+        <a href="#booking" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="Booking" aria-label="Booking">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H8v-1h8v1zm0-2H8v-1h8v1zm-4-9h4v4h-4V8z"/></svg>
+        </a>
+        <a href="#contact" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="Contact" aria-label="Contact">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+        <button onclick="openModal('loginModal')" class="p-2 rounded-full bg-teal-700 text-white hover:bg-teal-800 hover:animate-pulse transition-all" title="Login" aria-label="Login">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        </button>
+        <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-700 text-white hover:bg-gray-800 transition-all" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.90-.1-1.36-.1z"/></svg>
+        </button>
+      </nav>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden bg-gradient-to-r from-teal-600 to-teal-800">
+      <div class="container mx-auto px-6 py-4 flex flex-col space-y-2">
+        <a href="#home" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="Home" aria-label="Home">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        </a>
+        <a href="#cars" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="Cars" aria-label="Cars">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+        </a>
+        <a href="#about" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="About" aria-label="About">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        </a>
+        <a href="#booking" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="Booking" aria-label="Booking">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H8v-1h8v1zm0-2H8v-1h8v1zm-4-9h4v4h-4V8z"/></svg>
+        </a>
+        <a href="#contact" class="p-2 rounded-full bg-amber-500 text-gray-800 hover:bg-amber-600 hover:animate-pulse transition-all" title="Contact" aria-label="Contact">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+        <button onclick="openModal('loginModal')" class="p-2 rounded-full bg-teal-700 text-white hover:bg-teal-800 hover:animate-pulse transition-all" title="Login" aria-label="Login">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        </button>
+        <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-700 text-white hover:bg-gray-800 transition-all" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.90-.1-1.36-.1z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <section id="home" class="relative h-96 flex items-center">
+    <img src="logo.jpg" alt="Su Sarige Futuristic Car Background" class="absolute inset-0 w-full h-full object-cover">
+    <div class="absolute inset-0 bg-teal-900/60"></div>
+    <div class="container mx-auto px-6 text-center relative z-10">
+      <h2 class="text-5xl font-playfair font-bold text-white mb-4">Rent Your Dream Car with Su Sarige</h2>
+      <p class="text-xl font-sans text-amber-500 mb-6">Luxury Travel, Redefined</p>
+      <a href="#booking" class="bg-amber-500 text-gray-800 px-8 py-3 rounded-lg shadow-xl hover:bg-amber-600 hover:animate-pulse transition-all animate-bounce" aria-label="Book Now">Book Now</a>
+    </div>
+  </section>
+  <section id="cars" class="py-16">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl font-playfair font-bold text-center text-gray-800 mb-12">Our Premium Fleet</h2>
+      <div class="flex justify-center space-x-4 mb-8">
+        <button onclick="filterCars('all')" class="px-4 py-2 bg-amber-500 text-gray-800 rounded-lg hover:bg-amber-600 hover:animate-pulse transition-all" aria-label="Show All Cars">All</button>
+        <button onclick="filterCars('Sedan')" class="px-4 py-2 bg-amber-500 text-gray-800 rounded-lg hover:bg-amber-600 hover:animate-pulse transition-all" aria-label="Show Sedans">Sedan</button>
+        <button onclick="filterCars('SUV')" class="px-4 py-2 bg-amber-500 text-gray-800 rounded-lg hover:bg-amber-600 hover:animate-pulse transition-all" aria-label="Show SUVs">SUV</button>
+        <button onclick="filterCars('Luxury Car')" class="px-4 py-2 bg-amber-500 text-gray-800 rounded-lg hover:bg-amber-600 hover:animate-pulse transition-all" aria-label="Show Luxury Cars">Luxury</button>
+      </div>
+      <div id="carContainer" class="grid grid-cols-1 gap-12 max-w-4xl mx-auto"></div>
+    </div>
+  </section>
+  <section id="about" class="py-16">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl font-playfair font-bold text-center text-gray-800 mb-12">About Su Sarige</h2>
+      <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-8 border border-amber-500 transform hover:scale-105 transition-all">
+        <img src="logo.jpg" alt="Su Sarige Luxury Car Interior for About Us" class="w-full h-64 object-cover rounded-lg mb-6" loading="lazy">
+        <p class="text-gray-600 text-lg font-sans mb-4">Welcome to Su Sarige – your trusted partner in convenient and reliable car rental services in Bengaluru. We are committed to delivering exceptional customer experiences through our diverse fleet of well-maintained vehicles. Whether it’s a business trip, weekend getaway, or daily commute, Su Sarige ensures a comfortable and hassle-free journey. Our mission is to provide affordable, high-quality car rental solutions with top standards of safety, comfort, and service.</p>
+        <p class="text-amber-500 text-xl font-playfair font-semibold text-center">Luxury Travel, Redefined</p>
+      </div>
+      <h3 class="text-3xl font-playfair font-bold text-center text-gray-800 mt-12 mb-8">Meet Our Team</h3>
+      <div class="relative max-w-3xl mx-auto">
+        <div id="teamCarousel" class="flex overflow-hidden">
+          <div class="min-w-full flex-shrink-0">
+            <div class="bg-white rounded-lg shadow-xl p-6 border border-amber-500 text-center">
+              <img src="ceo.jpg" alt="Su Sarige Team Member Rajesh Devanal" class="w-32 h-32 mx-auto mb-4 rounded-full" loading="lazy">
+              <h4 class="text-xl font-playfair font-semibold text-gray-800">Rajesh Devanal</h4>
+              <p class="text-gray-600">Founder & CEO</p>
+            </div>
+          </div>
+          <div class="min-w-full flex-shrink-0">
+            <div class="bg-white rounded-lg shadow-xl p-6 border border-amber-500 text-center">
+              <img src="logo.jpg" alt="Su Sarige Team Member Priya Nair" class="w-32 h-32 mx-auto mb-4 rounded-full" loading="lazy">
+              <h4 class="text-xl font-playfair font-semibold text-gray-800">Priya Nair</h4>
+              <p class="text-gray-600">Operations Manager</p>
+            </div>
+          </div>
+        </div>
+        <button onclick="nextTeamSlide()" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-amber-500 text-gray-800 p-2 rounded-full hover:bg-amber-600 transition-all" aria-label="Next Team Member">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+        <button onclick="prevTeamSlide()" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-amber-500 text-gray-800 p-2 rounded-full hover:bg-amber-600 transition-all" aria-label="Previous Team Member">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+  <section id="booking" class="py-16 bg-teal-100">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl font-playfair font-bold text-center text-gray-800 mb-12">Book Your Su Sarige Experience</h2>
+      <form id="bookingForm" class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-xl border border-amber-500" onsubmit="return validateBookingForm(event)">
+        <div class="mb-6">
+          <label for="fullName" class="block text-gray-700 font-semibold">Full Name</label>
+          <input id="fullName" type="text" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" required aria-describedby="fullNameError">
+          <p id="fullNameError" class="text-red-500 text-sm hidden">Name is required</p>
+        </div>
+        <div class="mb-6">
+          <label for="carType" class="block text-gray-700 font-semibold">Car Type</label>
+          <select id="carType" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" required aria-describedby="carTypeError">
+            <option value="">Select Car</option>
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Luxury Car">Luxury Car</option>
+          </select>
+          <p id="carTypeError" class="text-red-500 text-sm hidden">Car type is required</p>
+        </div>
+        <div class="mb-6">
+          <label for="rentalDate" class="block text-gray-700 font-semibold">Rental Date</label>
+          <input id="rentalDate" type="date" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" required aria-describedby="rentalDateError" min="2025-08-24">
+          <p id="rentalDateError" class="text-red-500 text-sm hidden">Please select a future date</p>
+        </div>
+        <div class="mb-6">
+          <label for="destination" class="block text-gray-700 font-semibold">Destination</label>
+          <input id="destination" type="text" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" placeholder="e.g., Bengaluru, KA" required aria-describedby="destinationError">
+          <p id="destinationError" class="text-red-500 text-sm hidden">Destination is required</p>
+        </div>
+        <button type="submit" class="bg-amber-500 text-gray-800 px-6 py-3 rounded-lg shadow-md hover:bg-amber-600 hover:animate-pulse transition-all w-full" aria-label="Submit Booking">Submit</button>
+        <p id="bookingMessage" class="text-center mt-4 hidden font-semibold"></p>
+      </form>
+    </div>
+  </section>
+  <section id="contact" class="py-16">
+    <div class="container mx-auto px-6 text-center">
+      <h2 class="text-4xl font-playfair font-bold text-gray-800 mb-12">Contact Su Sarige</h2>
+      <p class="text-gray-600 mb-6">Email: devanalrajesh@gmail.com | Phone: (8747079276)</p>
+      <p class="text-gray-600 mb-6">Address: Malleshwaram, Bengaluru</p>
+      <iframe class="w-full h-64 rounded-lg mb-6" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.660174406878!2d77.5630488!3d13.0005143!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae17c96b615e27%3A0x3e2b2e5a8f1b8e3b!2sMalleshwaram%2C%20Bengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1698765432109" frameborder="0" allowfullscreen loading="lazy"></iframe>
+      <div class="flex justify-center space-x-4">
+        <a href="https://x.com" target="_blank" class="text-teal-600 hover:text-teal-800" aria-label="Follow us on X">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://instagram.com" target="_blank" class="text-teal-600 hover:text-teal-800" aria-label="Follow us on Instagram">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.336 3.608 1.311.975.975 1.249 2.242 1.311 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.336 2.633-1.311 3.608-.975.975-2.242 1.249-3.608 1.311-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.336-3.608-1.311-.975-.975-1.249-2.242-1.311-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.336-2.633 1.311-3.608.975-.975 2.242-1.249 3.608-1.311 1.266.058 1.646-.07 4.85-.07m0-2.163c-3.259 0-3.667.014-4.947.072-1.425.065-2.694.406-3.717 1.429-1.023 1.023-1.364 2.292-1.429 3.717-.058 1.28-.072 1.688-.072 4.947s.014 3.667.072 4.947c.065 1.425.406 2.694 1.429 3.717 1.023 1.023 2.292 1.364 3.717 1.429 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.425-.065 2.694-.406 3.717-1.429 1.023-1.023 1.364-2.292 1.429-3.717.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.065-1.425-.406-2.694-1.429-3.717-1.023-1.023-2.292-1.364-3.717-1.429-1.28-.058-1.688-.072-4.947-.072z"/></svg>
+        </a>
+        <a href="https://linkedin.com" target="_blank" class="text-teal-600 hover:text-teal-800" aria-label="Follow us on LinkedIn">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-6 text-center">
+      <div class="flex justify-center items-center mb-4">
+        <img src="logo.jpg" alt="Su Sarige Logo" class="w-20 h-20 rounded-full mx-auto mb-4" loading="lazy">
+        <p class="text-lg font-playfair font-bold">Su Sarige</p>
+      </div>
+      <p>© 2025 Su Sarige. All rights reserved.</p>
+    </div>
+  </footer>
+  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-xl max-w-lg w-full border border-amber-500">
+      <div class="flex justify-center mb-6">
+        <img src="logo.jpg" alt="Su Sarige Logo" class="h-8" loading="lazy">
+      </div>
+      <h2 class="text-3xl font-playfair font-bold text-gray-800 mb-6 text-center">Login to Su Sarige</h2>
+      <div class="mb-6">
+        <label for="loginEmail" class="block text-gray-700 font-semibold">Email</label>
+        <input id="loginEmail" type="email" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" required aria-describedby="loginEmailError">
+        <p id="loginEmailError" class="text-red-500 text-sm hidden">Valid email is required</p>
+      </div>
+      <div class="mb-6">
+        <label for="loginPassword" class="block text-gray-700 font-semibold">Password</label>
+        <input id="loginPassword" type="password" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" required aria-describedby="loginPasswordError">
+        <p id="loginPasswordError" class="text-red-500 text-sm hidden">Password is required</p>
+      </div>
+      <button onclick="submitLogin()" class="bg-amber-500 text-gray-800 px-6 py-3 rounded-lg shadow-md hover:bg-amber-600 hover:animate-pulse transition-all w-full" aria-label="Login">Login</button>
+      <button onclick="openModal('registerModal'); closeModal('loginModal')" class="mt-4 text-teal-600 hover:text-teal-700 transition-all w-full" aria-label="Switch to Register">Need an account? Register</button>
+      <button onclick="closeModal('loginModal')" class="mt-2 text-gray-600 hover:text-gray-700 transition-all w-full" aria-label="Close Login Modal">Close</button>
+    </div>
+  </div>
+  <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-xl max-w-lg w-full border border-amber-500">
+      <div class="flex justify-center mb-6">
+        <img src="logo.jpg" alt="Su Sarige Logo" class="h-8" loading="lazy">
+      </div>
+      <h2 class="text-3xl font-playfair font-bold text-gray-800 mb-6 text-center">Register with Su Sarige</h2>
+      <div class="mb-6">
+        <label for="registerFullName" class="block text-gray-700 font-semibold">Full Name</label>
+        <input id="registerFullName" type="text" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" required aria-describedby="registerFullNameError">
+        <p id="registerFullNameError" class="text-red-500 text-sm hidden">Name is required</p>
+      </div>
+      <div class="mb-6">
+        <label for="registerEmail" class="block text-gray-700 font-semibold">Email</label>
+        <input id="registerEmail" type="email" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" required aria-describedby="registerEmailError">
+        <p id="registerEmailError" class="text-red-500 text-sm hidden">Valid email is required</p>
+      </div>
+      <div class="mb-6">
+        <label for="registerPassword" class="block text-gray-700 font-semibold">Password</label>
+        <input id="registerPassword" type="password" class="w-full p-3 border border-gray-300 rounded-lg mt-1 focus:ring-2 focus:ring-amber-500" required aria-describedby="registerPasswordError">
+        <p id="registerPasswordError" class="text-red-500 text-sm hidden">Password must be at least 6 characters</p>
+      </div>
+      <button onclick="submitRegister()" class="bg-amber-500 text-gray-800 px-6 py-3 rounded-lg shadow-md hover:bg-amber-600 hover:animate-pulse transition-all w-full" aria-label="Register">Register</button>
+      <button onclick="openModal('loginModal'); closeModal('registerModal')" class="mt-4 text-teal-600 hover:text-teal-700 transition-all w-full" aria-label="Switch to Login">Already have an account? Login</button>
+      <button onclick="closeModal('registerModal')" class="mt-2 text-gray-600 hover:text-gray-700 transition-all w-full" aria-label="Close Register Modal">Close</button>
+    </div>
+  </div>
+  <div id="bookingSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full border border-amber-500">
+      <div class="flex justify-center mb-6">
+        <img src="logo.jpg" alt="Su Sarige Logo" class="h-8" loading="lazy">
+      </div>
+      <h2 class="text-3xl font-playfair font-bold text-gray-800 mb-4 text-center">Successfully booked!</h2>
+      <p class="text-xl font-sans text-amber-500 font-semibold text-center mb-6">Happy Journey!</p>
+      <button onclick="closeModal('bookingSuccessModal')" class="bg-amber-500 text-gray-800 px-6 py-3 rounded-lg shadow-md hover:bg-amber-600 hover:animate-pulse transition-all w-full" aria-label="Close Booking Success Modal">Close</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
