@@ -64,8 +64,7 @@ Enjoy the experience 🚗✨
 🌍 Live Demo
 
 🔗 Domain / Live Link:
-👉(https://github.com/Rajeshdevanal/Su-sareege-website.oi.git)
-
+👉https://rajeshdevanal.github.io/Su-sareege-website.oi/
 🔮 Future Enhancements
 🔐 Backend authentication
 
